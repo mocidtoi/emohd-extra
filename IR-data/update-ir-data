@@ -1,0 +1,2 @@
+#!/bin/bash
+sqlite3 IR_data_db_complete.sqlite < update-ir-data.sql

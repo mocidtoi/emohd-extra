@@ -1,0 +1,19 @@
+#!/bin/bash
+BASE_DIR=`dirname $0`
+
+RESOURCE_ICON_DIR=$BASE_DIR/../emohd-extra/resources/iOS/Resources/icons
+PROJECT_ICON_DIR=$BASE_DIR/../emohd-build/ios/project/DHome/Images.xcassets/AppIcon.appiconset
+
+RESOURCE_SPLASH_DIR=$BASE_DIR/../emohd-extra/resources/iOS/Resources/splash
+PROJECT_SPLASH_DIR=$BASE_DIR/../emohd-build/ios/project/DHome/Images.xcassets/LaunchImage.launchimage
+
+PROJECT_DIR=$BASE_DIR/../emohd-build/ios/project
+
+cp $RESOURCE_ICON_DIR/*.png $PROJECT_ICON_DIR/
+cp $RESOURCE_SPLASH_DIR/*.png $PROJECT_SPLASH_DIR/
+
+sed -i '' '/cordova.js/i \
+  <script src="/hack.js"></script>
+' $PROJECT_DIR/www/application/index.html
+
+open $BASE_DIR/../emohd-build/ios/project/DHome.xcodeproj

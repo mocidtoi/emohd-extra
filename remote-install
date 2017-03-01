@@ -1,0 +1,10 @@
+#!/bin/bash
+BASE_DIR=`dirname $0`
+TAR_NAME=emohd.tgz
+TAR_DIR=$BASE_DIR/../emohd-build
+TARFILE=$TAR_DIR/$TAR_NAME
+
+ssh -l root dhome.local "/etc/dhome/emohd-launcher/stop-emohd-launcher;cd /opt;rm -fr emohd"
+scp $TARFILE root@dhome.local:/opt/
+ssh -l root dhome.local "cd /opt ;tar -xzf emohd.tgz ;mv bundle emohd ;rm -fr emohd.tgz"
+ssh -l root dhome.local "/etc/dhome/start-emohd-launcher"

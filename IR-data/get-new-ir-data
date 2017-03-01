@@ -1,0 +1,2 @@
+#!/bin/bash
+adb pull /sdcard/Thanhnv/Database/IR_data_db.sqlite .

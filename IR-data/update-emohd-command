@@ -1,0 +1,2 @@
+#!/bin/bash
+sqlite3 emohd.sqlite < migrate-ir-data.sql

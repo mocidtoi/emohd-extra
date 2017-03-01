@@ -1,0 +1,36 @@
+#!/bin/bash
+BASE_DIR=`dirname $0`
+APK_FILE=release-unsigned.apk
+APK_DIR=$BASE_DIR/../emohd-build/android
+APK=$APK_DIR/$APK_FILE
+
+RESOURCE_DIR=$BASE_DIR/../emohd-extra/resources/Android/res
+PROJECT_DIR=$BASE_DIR/../emohd-build/android/project
+
+cp -R $RESOURCE_DIR $PROJECT_DIR
+
+sed -i '/cordova.js/i <script src="/hack.js"></script>' $PROJECT_DIR/assets/www/application/index.html
+sed -i '/cordova.js/i <script src="/hack.js"></script>' $PROJECT_DIR/build/intermediates/assets/release/www/application/index.html
+
+cd $PROJECT_DIR
+#echo "android.useDeprecatedNdk=true" > gradle.properties
+echo "android {
+    packagingOptions {
+        exclude \"META-INF/INDEX.LIST\"
+    }
+}" >> build.gradle
+
+./gradlew clean
+./gradlew CdvBuildRelease
+mv build/outputs/apk/project-release-unsigned.apk ../$APK_FILE
+
+cd -
+pwd
+
+jarsigner -verbose -keystore $BASE_DIR/keystore/dhome-release-key.keystore -signedjar emohd-signed.apk "$APK" alias_dhome 
+
+echo ""
+echo ""
+echo "Checking if APK is verified..."
+jarsigner -verify emohd-signed.apk
+zipalign -f -v 4 emohd-signed.apk DHome.apk
